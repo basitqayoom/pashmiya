@@ -1,0 +1,205 @@
+.card {
+  display: block;
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bg-card);
+  margin-bottom: 12px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+
+.card:hover .image {
+  transform: scale(1.02);
+}
+
+.outOfStockBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.price {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.usd {
+  font-weight: 400;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-left: 6px;
+}
+
+.actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 300ms ease;
+}
+
+.card:hover .actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quickActions {
+  display: flex;
+  gap: 8px;
+}
+
+.selectOptions {
+  width: 100%;
+  padding: 10px 16px;
+  background: white;
+  color: var(--text-primary);
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.selectOptions:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.actionBtn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.addCart {
+  background: white;
+  color: var(--text-primary);
+}
+
+.addCart:hover:not(:disabled) {
+  background: var(--text-primary);
+  color: white;
+}
+
+.addCart:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.buyNow {
+  background: var(--accent);
+  color: white;
+}
+
+.buyNow:hover {
+  background: #b8860b;
+}
+
+.buyNow:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.optionsPopup {
+  position: absolute;
+  bottom: 60px;
+  left: 12px;
+  right: 12px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.optionGroup {
+  margin-bottom: 12px;
+}
+
+.optionGroup label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.optionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.optionBtn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.optionBtn:hover {
+  border-color: var(--text-primary);
+}
+
+.optionBtn.selected {
+  background: var(--text-primary);
+  color: white;
+  border-color: var(--text-primary);
+}
+
+.optionActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.optionActions .actionBtn {
+  padding: 8px 10px;
+}

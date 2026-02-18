@@ -1,0 +1,368 @@
+.page {
+  min-height: 100vh;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.heroImage {
+  position: absolute;
+  inset: 0;
+}
+
+.heroVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 25, 23, 0.3) 0%,
+    rgba(28, 25, 23, 0.5) 100%
+  );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  padding: 0 24px;
+}
+
+.heroContent h1 {
+  color: white;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+
+.heroContent p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.cta {
+  display: inline-block;
+  padding: 16px 40px;
+  background: white;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all var(--transition);
+}
+
+.cta:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Section Styles */
+.section {
+  padding: 16px 0;
+}
+
+.sectionAlt {
+  background: var(--bg-card);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sectionHeader h2 {
+  margin-bottom: 12px;
+}
+
+.sectionHeader p {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+/* Category Card */
+.categoryCard {
+  display: block;
+  width: 100%;
+  height: 380px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.categoryCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.categoryCard:hover img {
+  transform: scale(1.08);
+}
+
+.categoryOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+}
+
+.categoryOverlay h3 {
+  color: white;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.categoryOverlay span {
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* View All */
+.viewAll {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.viewAllLink {
+  display: inline-block;
+  padding: 16px 40px;
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all var(--transition);
+}
+
+.viewAllLink:hover {
+  background: var(--text-primary);
+  color: white;
+}
+
+/* Story Sections */
+.storySection {
+  padding: 80px 0;
+  background: var(--bg-card);
+}
+
+.storySectionAlt {
+  background: var(--bg-primary);
+}
+
+.storySection .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.storySectionAlt .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  direction: rtl;
+}
+
+.storySectionAlt .container > * {
+  direction: ltr;
+}
+
+.storyContent h2 {
+  margin-bottom: 24px;
+}
+
+.storyContent p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.storyLink {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: color var(--transition);
+}
+
+.storyLink:hover {
+  color: var(--text-primary);
+}
+
+.storyImage {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.storyImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Testimonials */
+.testimonialCard {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonialHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.testimonialImage {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonialHeader h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.testimonialHeader span {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.testimonialText {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-style: italic;
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .categoryCard {
+    height: 340px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .storySection .container,
+  .storySectionAlt .container {
+    gap: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 500px;
+  }
+
+  .heroContent p {
+    font-size: 16px;
+  }
+
+  .section {
+    padding: 48px 0;
+  }
+
+  .sectionHeader {
+    margin-bottom: 32px;
+  }
+
+  .categoryCard {
+    height: 300px;
+  }
+
+  .categoryOverlay h3 {
+    font-size: 18px;
+  }
+  
+  .categoryOverlay {
+    padding: 16px;
+  }
+
+  .storySection,
+  .storySectionAlt {
+    padding: 48px 0;
+  }
+
+  .storySection .container,
+  .storySectionAlt .container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .storyImage {
+    aspect-ratio: 3 / 2;
+    order: -1;
+  }
+  
+  .storySectionAlt .container {
+    direction: ltr;
+  }
+
+  .testimonialCard {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .categoryCard {
+    height: 280px;
+  }
+
+  .categoryOverlay h3 {
+    font-size: 16px;
+  }
+}

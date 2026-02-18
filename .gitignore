@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# macOS system files
+.DS_Store
+
+# opencode config
+.opencode/
+
+# Build outputs
+.next/
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.swp

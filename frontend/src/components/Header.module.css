@@ -1,0 +1,621 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  transition: all var(--transition);
+  background: transparent;
+}
+
+.header.heroLight {
+  color: white;
+}
+
+.header.heroLight .logo {
+  color: white;
+}
+
+.header.heroLight .navLink {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.header.heroLight .navLink:hover {
+  color: white;
+}
+
+.header.heroLight .navLink.active {
+  color: white;
+  border-bottom: 1px solid white;
+}
+
+.header.heroLight .currencyButton {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+.header.heroLight .currencyButton:hover {
+  border-color: white;
+}
+
+.header.heroLight .searchButton {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.header.heroLight .searchButton:hover {
+  color: white;
+}
+
+.header.heroLight .cartLink {
+  color: white;
+}
+
+.header.heroLight .menuIcon {
+  background: white;
+}
+
+.header.heroLight .menuIcon::before,
+.header.heroLight .menuIcon::after {
+  background: white;
+}
+
+.header.scrolled {
+  background: rgba(250, 250, 249, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--text-primary);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navLink {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+  letter-spacing: 0.5px;
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+}
+
+.navLink.active {
+  color: var(--accent);
+}
+
+.searchButton {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: color var(--transition);
+  padding: 0;
+}
+
+.searchButton:hover {
+  color: var(--text-primary);
+}
+
+.currencyContainer {
+  position: relative;
+}
+
+.currencyButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.currencyButton:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.currencyDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 140px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  animation: dropDownFade 0.2s ease;
+}
+
+@keyframes dropDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.currencyOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+
+.currencyOption:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.currencyOption.active {
+  background: var(--bg-secondary);
+  color: var(--accent);
+}
+
+.currencyCode {
+  font-weight: 600;
+}
+
+.currencySymbol {
+  opacity: 0.7;
+}
+
+.cartLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+  transition: color var(--transition);
+}
+
+.cartLink:hover {
+  color: var(--accent);
+}
+
+.cartCount {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuButton {
+  display: none;
+  width: 32px;
+  height: 32px;
+  position: relative;
+  z-index: 101;
+}
+
+.menuIcon {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  position: relative;
+  transition: all var(--transition);
+}
+
+.menuIcon::before,
+.menuIcon::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  transition: all var(--transition);
+}
+
+.menuIcon::before {
+  top: -8px;
+}
+
+.menuIcon::after {
+  top: 8px;
+}
+
+.menuIcon.open {
+  background: transparent;
+}
+
+.menuIcon.open::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.menuIcon.open::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.userButton:hover {
+  color: var(--text-primary);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 50;
+}
+
+.dropdown a,
+.dropdown button {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+
+.dropdown a:hover,
+.dropdown button:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.searchOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 100px;
+  animation: overlayFade 0.2s ease;
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.searchModal {
+  width: 100%;
+  max-width: 640px;
+  background: var(--bg-primary);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: modalSlide 0.3s ease;
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.searchHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.searchInput {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 18px;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--text-muted);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.closeButton:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.searchBody {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.searchLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.searchHint {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.searchHint > p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.searchSuggestions h4 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.suggestionTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.suggestionTags button {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.suggestionTags button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.noResults {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.noResults p:first-child {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.noResults p:last-child {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.searchResults {
+  padding: 8px;
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+
+.searchResultItem:hover {
+  background: var(--bg-secondary);
+}
+
+.resultImage {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.resultImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resultInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultType {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: rgba(217, 119, 6, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.resultInfo h4 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resultInfo p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+}
+
+.searchResultItem svg {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    background: var(--bg-primary);
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+    transform: translateX(100%);
+    transition: transform var(--transition);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+  }
+
+  .nav.navOpen {
+    transform: translateX(0);
+  }
+
+  .navLink {
+    font-size: 18px;
+  }
+
+  .searchOverlay {
+    padding-top: 60px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .searchModal {
+    max-width: 100%;
+  }
+}

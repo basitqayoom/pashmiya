@@ -1,0 +1,263 @@
+.page {
+  min-height: 100vh;
+  padding: 120px 0 80px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container h1 {
+  margin-bottom: 48px;
+}
+
+.empty {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.empty h1 {
+  margin-bottom: 16px;
+}
+
+.empty p {
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.shopButton {
+  padding: 16px 40px;
+  background: var(--text-primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background var(--transition);
+}
+
+.shopButton:hover {
+  background: var(--accent);
+}
+
+.cartLayout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 60px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.item {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  background: var(--bg-card);
+  position: relative;
+}
+
+.itemImage {
+  width: 140px;
+  height: 180px;
+  flex-shrink: 0;
+}
+
+.itemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itemDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemDetails h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.variant {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.itemPrice {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.stockInfo {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.usd {
+  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-left: 6px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.quantityButton {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-primary);
+  transition: all var(--transition);
+}
+
+.quantityButton:hover {
+  border-color: var(--text-primary);
+}
+
+.quantityButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quantityButton:disabled:hover {
+  border-color: var(--border);
+}
+
+.quantity span {
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
+}
+
+.removeButton {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+}
+
+.removeButton:hover {
+  color: var(--error);
+}
+
+.summary {
+  padding: 32px;
+  background: var(--bg-card);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.summary h3 {
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.checkoutButton {
+  width: 100%;
+  display: block;
+  padding: 18px;
+  background: var(--text-primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background var(--transition);
+}
+
+.checkoutButton:hover {
+  background: var(--accent);
+}
+
+.clearButton {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+  transition: color var(--transition);
+  margin-top: 4px;
+}
+
+.clearButton:hover {
+  color: var(--error);
+  text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+  .cartLayout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .summary {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 100px 0 60px;
+  }
+
+  .container h1 {
+    margin-bottom: 32px;
+  }
+
+  .item {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .itemImage {
+    width: 100%;
+    height: 200px;
+  }
+}
