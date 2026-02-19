@@ -7,12 +7,12 @@ import (
 
 	"pashmina-backend/config"
 	"pashmina-backend/models"
+	"pashmina-backend/utils"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Products
 func GetProducts(c *gin.Context) {
 	var products []models.Product
 	query := config.DB.Preload("Category")
@@ -27,10 +27,36 @@ func GetProducts(c *gin.Context) {
 
 	sort := c.DefaultQuery("sort", "id")
 	order := c.DefaultQuery("order", "desc")
+
+	sort, err := utils.ValidateSortColumn(sort)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	order, err = utils.ValidateOrderDirection(order)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	query = query.Order(sort + " " + order)
 
-	query.Find(&products)
-	c.JSON(http.StatusOK, products)
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	page, limit = utils.ValidatePagination(page, limit)
+	offset := (page - 1) * limit
+
+	var total int64
+	query.Model(&models.Product{}).Count(&total)
+
+	query.Offset(offset).Limit(limit).Find(&products)
+
+	c.JSON(http.StatusOK, gin.H{
+		"products": products,
+		"total":    total,
+		"page":     page,
+		"limit":    limit,
+	})
 }
 
 func GetProduct(c *gin.Context) {
@@ -112,11 +138,11 @@ func SearchProducts(c *gin.Context) {
 
 func CreateProduct(c *gin.Context) {
 	var input struct {
-		Name        string   `json:"name"`
-		Price       float64  `json:"price"`
+		Name        string   `json:"name" binding:"required"`
+		Price       float64  `json:"price" binding:"required"`
 		Description string   `json:"description"`
 		Image       string   `json:"image"`
-		CategoryID  uint     `json:"category_id"`
+		CategoryID  uint     `json:"category_id" binding:"required"`
 		Colors      []string `json:"colors"`
 		Sizes       []string `json:"sizes"`
 		Stock       int      `json:"stock"`
@@ -129,10 +155,36 @@ func CreateProduct(c *gin.Context) {
 		return
 	}
 
+	if err := utils.ValidateProductName(input.Name); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := utils.ValidatePrice(input.Price); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := utils.ValidateStock(input.Stock); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := utils.ValidateURL(input.Image); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var category models.Category
+	if err := config.DB.First(&category, input.CategoryID).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Category not found"})
+		return
+	}
+
 	product := models.Product{
-		Name:        input.Name,
+		Name:        utils.SanitizeString(input.Name, 255),
 		Price:       input.Price,
-		Description: input.Description,
+		Description: utils.SanitizeString(input.Description, 2000),
 		Image:       input.Image,
 		CategoryID:  input.CategoryID,
 		Colors:      input.Colors,
@@ -142,7 +194,13 @@ func CreateProduct(c *gin.Context) {
 		IsActive:    input.IsActive,
 	}
 
-	config.DB.Create(&product)
+	if err := config.DB.Create(&product).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create product"})
+		return
+	}
+
+	utils.Info("Product created", map[string]interface{}{"product_id": product.ID, "name": product.Name})
+
 	c.JSON(http.StatusCreated, product)
 }
 
@@ -514,6 +572,7 @@ func CreateOrder(c *gin.Context) {
 		ShippingCountry string           `json:"shipping_country" binding:"required"`
 		ShippingZip     string           `json:"shipping_zip" binding:"required"`
 		ShippingPhone   string           `json:"shipping_phone" binding:"required"`
+		ShippingEmail   string           `json:"shipping_email"`
 		CouponCode      string           `json:"coupon_code"`
 		Notes           string           `json:"notes"`
 	}
@@ -523,9 +582,48 @@ func CreateOrder(c *gin.Context) {
 		return
 	}
 
+	if err := utils.ValidateAddress(input.ShippingAddress, input.ShippingCity, input.ShippingState, input.ShippingCountry); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := utils.ValidatePostalCode(input.ShippingZip); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	tx := config.DB.Begin()
+
+	for _, item := range input.Items {
+		var product models.Product
+		if err := tx.First(&product, item.ProductID).Error; err != nil {
+			tx.Rollback()
+			c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Product %d not found", item.ProductID)})
+			return
+		}
+
+		if product.Stock < item.Quantity {
+			tx.Rollback()
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      "Insufficient stock",
+				"product_id": item.ProductID,
+				"product":    product.Name,
+				"available":  product.Stock,
+				"requested":  item.Quantity,
+			})
+			return
+		}
+
+		if err := tx.Model(&product).Update("stock", product.Stock-item.Quantity).Error; err != nil {
+			tx.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update stock"})
+			return
+		}
+	}
+
 	order := models.Order{
 		UserID:          input.UserID,
-		Status:          "confirmed",
+		Status:          "pending_payment",
 		TotalAmount:     input.TotalAmount,
 		DiscountAmount:  input.DiscountAmount,
 		ShippingCost:    input.ShippingCost,
@@ -537,11 +635,13 @@ func CreateOrder(c *gin.Context) {
 		ShippingCountry: input.ShippingCountry,
 		ShippingZip:     input.ShippingZip,
 		ShippingPhone:   input.ShippingPhone,
+		ShippingEmail:   input.ShippingEmail,
 		CouponCode:      input.CouponCode,
 		Notes:           input.Notes,
 	}
 
-	if err := config.DB.Create(&order).Error; err != nil {
+	if err := tx.Create(&order).Error; err != nil {
+		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create order"})
 		return
 	}
@@ -555,11 +655,23 @@ func CreateOrder(c *gin.Context) {
 			Color:     itemInput.Color,
 			Size:      itemInput.Size,
 		}
-		if err := config.DB.Create(&orderItem).Error; err != nil {
+		if err := tx.Create(&orderItem).Error; err != nil {
+			tx.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create order items"})
 			return
 		}
 	}
+
+	if err := tx.Commit().Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to complete order"})
+		return
+	}
+
+	utils.Info("Order created", map[string]interface{}{
+		"order_id": order.ID,
+		"user_id":  input.UserID,
+		"total":    input.TotalAmount,
+	})
 
 	c.JSON(http.StatusCreated, gin.H{
 		"order_id": order.ID,

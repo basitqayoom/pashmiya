@@ -583,28 +583,6 @@ func UpdateOrderStatus(c *gin.Context) {
 	})
 }
 
-// GetUserOrders gets all orders for a user
-func GetUserOrders(c *gin.Context) {
-	userIDStr := c.Param("userId")
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
-
-	var orders []models.Order
-	query := config.DB.Where("user_id = ?", userID).Preload("Items.Product")
-
-	// Filter by status if provided
-	if status := c.Query("status"); status != "" {
-		query = query.Where("status = ?", status)
-	}
-
-	query.Order("created_at DESC").Find(&orders)
-
-	c.JSON(http.StatusOK, orders)
-}
-
 // GetOrderDetails gets detailed information about an order
 func GetOrderDetails(c *gin.Context) {
 	orderIDStr := c.Param("id")

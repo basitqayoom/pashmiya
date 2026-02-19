@@ -38,7 +38,7 @@ export default function NotificationSettingsPage() {
   const [pushEnabled, setPushEnabled] = useState(false);
 
   useEffect(() => {
-    api.getPreferences()
+    api.getNotificationPreferences()
       .then(setPreferences)
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -48,7 +48,7 @@ export default function NotificationSettingsPage() {
     if (!preferences) return;
     setSaving(true);
     try {
-      await api.updatePreferences(preferences);
+      await api.updateNotificationPreferences(preferences);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {

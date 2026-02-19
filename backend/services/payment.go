@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -156,7 +157,6 @@ func (s *RazorpayService) ParseWebhook(payload []byte, signature string) (map[st
 		secret = os.Getenv("RAZORPAY_KEY_SECRET")
 	}
 
-	// Verify webhook signature
 	h := hmac.New(sha256.New, []byte(secret))
 	h.Write(payload)
 	expectedSignature := hex.EncodeToString(h.Sum(nil))
@@ -165,10 +165,11 @@ func (s *RazorpayService) ParseWebhook(payload []byte, signature string) (map[st
 		return nil, errors.New("invalid webhook signature")
 	}
 
-	// Parse the payload
 	var event map[string]interface{}
-	// Note: In a real implementation, you'd use json.Unmarshal here
-	// For now, returning a placeholder
+	if err := json.Unmarshal(payload, &event); err != nil {
+		return nil, fmt.Errorf("failed to parse webhook payload: %w", err)
+	}
+
 	return event, nil
 }
 

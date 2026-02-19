@@ -197,11 +197,11 @@ function CheckoutContent() {
 
       const orderResponse = await api.createOrder(orderData);
       
-      if (!orderResponse.id && !orderResponse.order_id) {
+      if (!orderResponse.order_id) {
         throw new Error('Failed to create order');
       }
 
-      const orderId = orderResponse.id || orderResponse.order_id;
+      const orderId = orderResponse.order_id;
 
       // Step 2: Create Razorpay payment intent
       const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;

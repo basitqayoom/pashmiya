@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from "@/context/CartContext";
-import { CurrencyProvider } from "@/context/CurrencyContext";
-import { WishlistProvider } from "@/context/WishlistContext";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Pashmiya | Authentic Kashmiri Pashmina Shawls",
@@ -25,15 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CurrencyProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </WishlistProvider>
-          </CartProvider>
-        </CurrencyProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

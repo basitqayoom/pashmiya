@@ -1,12 +1,16 @@
 # Dependencies
 node_modules/
+vendor/
 
 # Logs
 *.log
+logs/
 
 # Environment variables
 .env
 .env.local
+.env.*.local
+*.env
 
 # macOS system files
 .DS_Store
@@ -18,7 +22,42 @@ node_modules/
 .next/
 dist/
 build/
+out/
+
+# Compiled binaries
+backend/pashmina-backend
+backend/pashmina-backend-new
+backend/pashmina-test
+backend/server
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build artifacts
+*.a
+*.o
+*.test
+*.out
+go.work
+go.work.sum
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # Temporary files
 *.tmp
-*.swp
+*.temp
+*.cache
+
+# Test coverage
+coverage/
+*.coverprofile
+
+# Uploads (development)
+uploads/
+!uploads/.gitkeep

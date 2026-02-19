@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"pashmina-backend/config"
 	"pashmina-backend/middleware"
@@ -16,6 +21,7 @@ import (
 func main() {
 	config.LoadEnv()
 	config.ConnectDB()
+	defer config.CloseDB()
 
 	config.DB.AutoMigrate(
 		&models.User{},
@@ -23,6 +29,7 @@ func main() {
 		&models.Category{},
 		&models.Order{},
 		&models.OrderItem{},
+		&models.PaymentTransaction{},
 		&models.Newsletter{},
 		&models.PageContent{},
 		&models.Notification{},
@@ -30,35 +37,71 @@ func main() {
 		&models.AdminNotificationSetting{},
 		&models.NotificationTemplate{},
 		&models.Catalogue{},
+		&models.Coupon{},
+		&models.Review{},
+		&models.Wishlist{},
+		&models.Address{},
+		&models.PushSubscription{},
 	)
 
 	seedData()
 
 	go websocket.GlobalHub.Run()
 
-	r := gin.Default()
+	if os.Getenv("ENVIRONMENT") == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	r := gin.New()
+	r.Use(gin.Recovery())
 	r.Use(middleware.CORS())
 
 	r.GET("/ws", websocket.HandleWebSocket)
 
 	routes.SetupRoutes(r)
 
+	r.Static("/uploads", "./uploads")
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	r.Static("/uploads", "./uploads")
+	srv := &http.Server{
+		Addr:         ":" + port,
+		Handler:      r,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
 
-	log.Printf("Server running on port %s", port)
-	r.Run(":" + port)
+	go func() {
+		log.Printf("Server running on port %s", port)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Printf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server exited properly")
 }
 
 func seedData() {
 	var count int64
 	config.DB.Model(&models.Product{}).Count(&count)
 	if count == 0 {
-		// Create Categories
 		categories := []models.Category{
 			{Name: "Classic", Slug: "classic", Description: "Timeless Pashmina classics with elegant simplicity", IsActive: true},
 			{Name: "Embroidered", Slug: "embroidered", Description: "Hand-embroidered masterpieces with intricate designs", IsActive: true},
@@ -70,7 +113,6 @@ func seedData() {
 			config.DB.Create(&cat)
 		}
 
-		// Create Products
 		products := []models.Product{
 			{
 				Name:        "Classic Pashmina Shawl",
@@ -168,7 +210,6 @@ func seedData() {
 		log.Println("Seed data created successfully!")
 	}
 
-	// Seed catalogues separately if none exist
 	seedCatalogues()
 }
 
@@ -177,7 +218,6 @@ func seedCatalogues() {
 	config.DB.Model(&models.Catalogue{}).Count(&catalogueCount)
 
 	if catalogueCount == 0 {
-		// Create Catalogues (Collections)
 		catalogues := []models.Catalogue{
 			{
 				Name:        "Winter Essentials",
@@ -213,37 +253,32 @@ func seedCatalogues() {
 			config.DB.Create(&catalogues[i])
 		}
 
-		// Associate products with catalogues
 		var productList []models.Product
 		config.DB.Find(&productList)
 
 		if len(productList) >= 8 {
-			// Winter Essentials - Classic and warm items
 			config.DB.Model(&catalogues[0]).Association("Products").Append(
-				productList[0], // Classic Pashmina Shawl
-				productList[2], // Solid Cashmere Wrap
-				productList[6], // Kani Checkered Shawl
+				productList[0],
+				productList[2],
+				productList[6],
 			)
 
-			// Bridal Collection - Embroidered and elegant
 			config.DB.Model(&catalogues[1]).Association("Products").Append(
-				productList[1], // Embroidered Floral Shawl
-				productList[7], // Amli Embroidered Shawl
-				productList[4], // Striped Silk-Pashmina
+				productList[1],
+				productList[7],
+				productList[4],
 			)
 
-			// Heritage Classics - Traditional and Jamawar
 			config.DB.Model(&catalogues[2]).Association("Products").Append(
-				productList[5], // Jamawar Traditional Shawl
-				productList[6], // Kani Checkered Shawl
-				productList[1], // Embroidered Floral Shawl
+				productList[5],
+				productList[6],
+				productList[1],
 			)
 
-			// Modern Minimalist - Contemporary designs
 			config.DB.Model(&catalogues[3]).Association("Products").Append(
-				productList[2], // Solid Cashmere Wrap
-				productList[4], // Striped Silk-Pashmina
-				productList[0], // Classic Pashmina Shawl
+				productList[2],
+				productList[4],
+				productList[0],
 			)
 		}
 
