@@ -62,7 +62,7 @@ export default function Products() {
     try {
       const res = await fetch(`${API_URL}/products`)
       const data = await res.json()
-      setProducts(data)
+      setProducts(data.products || data || [])
     } catch (err) {
       console.error('Error fetching:', err)
     } finally {

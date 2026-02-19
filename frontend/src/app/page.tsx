@@ -59,7 +59,7 @@ export default function Home() {
       api.getProducts({ featured: true }),
       api.getCategories()
     ]).then(([productsData, categoriesData]) => {
-      setProducts(productsData);
+      setProducts(productsData.products || productsData || []);
       setCategories(categoriesData || []);
     }).catch(console.error)
       .finally(() => setLoading(false));

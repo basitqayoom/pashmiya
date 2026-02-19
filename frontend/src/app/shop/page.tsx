@@ -40,7 +40,7 @@ function ShopContent() {
       api.getCategories(),
       api.getFilterOptions()
     ]).then(([productsData, categoriesData, filtersData]) => {
-      setProducts(productsData);
+      setProducts(productsData.products || productsData || []);
       setCategories(categoriesData || []);
       setFilterOptions(filtersData);
       
